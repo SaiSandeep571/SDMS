@@ -1,0 +1,2 @@
+/Users/sabarinathp/Works/SDMS/android/app/.cxx/Debug/5x4a5z43/x86_64/CMakeFiles/edit_cache.dir
+/Users/sabarinathp/Works/SDMS/android/app/.cxx/Debug/5x4a5z43/x86_64/CMakeFiles/rebuild_cache.dir

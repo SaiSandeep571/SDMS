@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:smartdrainage/Home/views/model.dart';
 
 class DrainDetails extends StatelessWidget {
-  const DrainDetails({super.key});
+  DrainModel model;
+  DrainDetails({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +11,7 @@ class DrainDetails extends StatelessWidget {
       body: SafeArea(
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
@@ -17,14 +19,14 @@ class DrainDetails extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
                 blurRadius: 10,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Selected Drain Details',
                 style: TextStyle(
                   fontSize: 20,
@@ -32,11 +34,11 @@ class DrainDetails extends StatelessWidget {
                   color: Color(0xFF1A1A1A),
                 ),
               ),
-              const SizedBox(height: 24),
-              const _DetailItem(
+              SizedBox(height: 24),
+              _DetailItem(
                 label: 'Drain ID',
                 child: Text(
-                  '#1023',
+                  '#${model.key}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -44,11 +46,11 @@ class DrainDetails extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const _DetailItem(
+              SizedBox(height: 16),
+              _DetailItem(
                 label: 'Location',
                 child: Text(
-                  'Main Street & 5th Avenue',
+                  '${model.address}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -57,11 +59,35 @@ class DrainDetails extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const _DetailItem(
-                label: 'Current Status',
-                child: _StatusChip(status: 'Near Full'),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: (model.level > 18)
+                      ? Colors.green.withOpacity(.2)
+                      : model.level > 8
+                          ? Colors.orange.withOpacity(.2)
+                          : Colors.red.withOpacity(.2),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  (model.level > 18)
+                      ? "Clean"
+                      : model.level > 8
+                          ? "Partial"
+                          : "Full",
+                  style: TextStyle(
+                    color: (model.level > 18)
+                        ? Colors.green
+                        : model.level > 8
+                            ? Colors.orange
+                            : Colors.red,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               _DetailItem(
                 label: 'Water Level',
                 child: Column(
@@ -69,18 +95,24 @@ class DrainDetails extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
-                      child: const LinearProgressIndicator(
-                        value: 0.75,
+                      child: LinearProgressIndicator(
+                        value: (20 - model.level) / 20,
                         backgroundColor: Color(0xFFFFF8E1),
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFFA000)),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          (model.level > 18)
+                              ? Colors.green
+                              : model.level > 8
+                                  ? Colors.orange
+                                  : Colors.red,
+                        ),
                         minHeight: 8,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Align(
+                    Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        '75%',
+                        '${(20 - model.level) / 20 * 100}',
                         style: TextStyle(
                           fontSize: 14,
                           color: Color(0xFF666666),
@@ -91,22 +123,22 @@ class DrainDetails extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const _DetailItem(
-                label: 'Last Cleaned',
-                child: Text(
-                  'Oct 15, 2023',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1A1A1A),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const _DetailItem(
-                label: 'Maintenance Logs',
-                child: _MaintenanceLogs(),
-              ),
+              // const _DetailItem(
+              //   label: 'Last Cleaned',
+              //   child: Text(
+              //     'Oct 15, 2023',
+              //     style: TextStyle(
+              //       fontSize: 16,
+              //       fontWeight: FontWeight.w600,
+              //       color: Color(0xFF1A1A1A),
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(height: 16),
+              // const _DetailItem(
+              //   label: 'Maintenance Logs',
+              //   child: _MaintenanceLogs(),
+              // ),
             ],
           ),
         ),
@@ -139,31 +171,6 @@ class _DetailItem extends StatelessWidget {
         const SizedBox(height: 8),
         child,
       ],
-    );
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  final String status;
-
-  const _StatusChip({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E1),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Text(
-        status,
-        style: const TextStyle(
-          color: Color(0xFFFFA000),
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
     );
   }
 }
